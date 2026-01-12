@@ -358,12 +358,29 @@ export function togglePrivateChat(targetId, targetName) {
 // 退出当前房间
 export function exitRoom() {
 	if (activeRoomIndex >= 0 && roomsData[activeRoomIndex]) {
-		const chatInst = roomsData[activeRoomIndex].chat;
+		const rd = roomsData[activeRoomIndex];
+		const chatInst = rd.chat;
 		if (chatInst && typeof chatInst.destruct === 'function') {
 			chatInst.destruct()
 		} else if (chatInst && typeof chatInst.disconnect === 'function') {
 			chatInst.disconnect()
 		}
+		
+		// 记录该节点已被解散
+		// Record that this node has been dissolved
+		try {
+			const dissolvedNodes = JSON.parse(localStorage.getItem('dissolvedNodes') || '[]');
+			// 使用节点名称的哈希值作为唯一标识符
+			// Use the hash of the node name as the unique identifier
+			const nodeId = rd.roomName.toLowerCase();
+			if (!dissolvedNodes.includes(nodeId)) {
+				dissolvedNodes.push(nodeId);
+				localStorage.setItem('dissolvedNodes', JSON.stringify(dissolvedNodes));
+			}
+		} catch (error) {
+			console.error('Failed to record dissolved node:', error);
+		}
+		
 		roomsData[activeRoomIndex].chat = null;
 		roomsData.splice(activeRoomIndex, 1);
 		if (roomsData.length > 0) {

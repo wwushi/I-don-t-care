@@ -172,8 +172,20 @@ export function renderMainHeader() {
 		onlineCount += 1
 	}
 	const safeRoomName = escapeHTML(roomName);
-	$id("main-header").innerHTML = `<button class="mobile-menu-btn"id="mobile-menu-btn"aria-label="Open Sidebar"><svg width="35px"height="35px"viewBox="0 0 24 24"fill="none"xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier"stroke-width="0"></g><g id="SVGRepo_tracerCarrier"stroke-linecap="round"stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill-rule="evenodd"clip-rule="evenodd"d="M21.4498 10.275L11.9998 3.1875L2.5498 10.275L2.9998 11.625H3.7498V20.25H20.2498V11.625H20.9998L21.4498 10.275ZM5.2498 18.75V10.125L11.9998 5.0625L18.7498 10.125V18.75H14.9999V14.3333L14.2499 13.5833H9.74988L8.99988 14.3333V18.75H5.2498ZM10.4999 18.75H13.4999V15.0833H10.4999V18.75Z"fill="#808080"></path></g></svg></button><div class="main-header-center"id="main-header-center"><div class="main-header-flex"><div class="group-title group-title-bold">#${safeRoomName}</div><span class="main-header-members">${onlineCount} ${t('ui.members', 'members')}</span></div></div><div class="main-header-actions"><button class="more-btn"id="more-btn"aria-label="More Options"><svg width="35px"height="35px"viewBox="0 0 24 24"fill="none"xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier"stroke-width="0"></g><g id="SVGRepo_tracerCarrier"stroke-linecap="round"stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><circle cx="12"cy="6"r="1.5"fill="#808080"></circle><circle cx="12"cy="12"r="1.5"fill="#808080"></circle><circle cx="12"cy="18"r="1.5"fill="#808080"></circle></g></svg></button><button class="mobile-info-btn"id="mobile-info-btn"aria-label="Open Members"><svg width="35px"height="35px"viewBox="0 0 24 24"fill="none"xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier"stroke-width="0"></g><g id="SVGRepo_tracerCarrier"stroke-linecap="round"stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill-rule="evenodd"clip-rule="evenodd"d="M16.0603 18.307C14.89 19.0619 13.4962 19.5 12 19.5C10.5038 19.5 9.10996 19.0619 7.93972 18.307C8.66519 16.7938 10.2115 15.75 12 15.75C13.7886 15.75 15.3349 16.794 16.0603 18.307ZM17.2545 17.3516C16.2326 15.5027 14.2632 14.25 12 14.25C9.73663 14.25 7.76733 15.5029 6.74545 17.3516C5.3596 15.9907 4.5 14.0958 4.5 12C4.5 7.85786 7.85786 4.5 12 4.5C16.1421 4.5 19.5 7.85786 19.5 12C19.5 14.0958 18.6404 15.9908 17.2545 17.3516ZM21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM12 12C13.2426 12 14.25 10.9926 14.25 9.75C14.25 8.50736 13.2426 7.5 12 7.5C10.7574 7.5 9.75 8.50736 9.75 9.75C9.75 10.9926 10.7574 12 12 12ZM12 13.5C14.0711 13.5 15.75 11.8211 15.75 9.75C15.75 7.67893 14.0711 6 12 6C9.92893 6 8.25 7.67893 8.25 9.75C8.25 11.8211 9.92893 13.5 12 13.5Z"fill="#808080"></path></g></svg></button><div class="more-menu"id="more-menu"><div class="more-menu-item"data-action="share">${t('action.share', 'Share')}</div><div class="more-menu-item"data-action="exit">${t('action.exit', 'Quit')}</div></div></div>`;
-	setupMoreBtnMenu();
+	$id("main-header").innerHTML = `<button class="mobile-menu-btn"id="mobile-menu-btn"aria-label="Open Sidebar"><svg width="35px"height="35px"viewBox="0 0 24 24"fill="none"xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier"stroke-width="0"></g><g id="SVGRepo_tracerCarrier"stroke-linecap="round"stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill-rule="evenodd"clip-rule="evenodd"d="M21.4498 10.275L11.9998 3.1875L2.5498 10.275L2.9998 11.625H3.7498V20.25H20.2498V11.625H20.9998L21.4498 10.275ZM5.2498 18.75V10.125L11.9998 5.0625L18.7498 10.125V18.75H14.9999V14.3333L14.2499 13.5833H9.74988L8.99988 14.3333V18.75H5.2498ZM10.4999 18.75H13.4999V15.0833H10.4999V18.75Z"fill="#808080"></path></g></svg></button><div class="main-header-center"id="main-header-center"><div class="main-header-flex"><div class="group-title group-title-bold">#${safeRoomName}</div><span class="main-header-members">${onlineCount} ${t('ui.members', 'members')}</span></div></div><div class="main-header-actions"><button class="action-btn share-btn"id="share-btn"aria-label="Share"><svg t="1768202432728" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4686" width="35" height="35"><path d="M288 373.333333c-82.432 0-149.333333 66.922667-149.333333 149.333334a149.333333 149.333333 0 0 0 149.333333 149.333333c82.496 0 149.333333-66.816 149.333333-149.333333 0-82.410667-66.88-149.333333-149.333333-149.333334z m0 64c47.104 0 85.333333 38.250667 85.333333 85.333334 0 47.146667-38.186667 85.333333-85.333333 85.333333a85.333333 85.333333 0 1 1 0-170.666667zM757.333333 672a128.021333 128.021333 0 1 0 128 128c0-70.656-57.344-128-128-128z m0 64a64.021333 64.021333 0 1 1-64 64c0-35.328 28.672-64 64-64zM757.333333 117.333333a128.021333 128.021333 0 1 0 128 128c0-70.656-57.344-128-128-128z m0 64a64.021333 64.021333 0 1 1-64 64c0-35.328 28.672-64 64-64z" fill="#808080" p-id="4687"></path><path d="M356.565333 580.864a32 32 0 0 1 43.904-10.965333l266.666667 160a32 32 0 0 1-32.938667 54.869333l-266.666666-160a32 32 0 0 1-10.965334-43.904zM643.050667 264.789333a32 32 0 0 1 36.565333 52.522667l-256 178.282667a32 32 0 0 1-36.565333-52.522667l256-178.282667z" fill="#808080" p-id="4688"></path></svg><span>${t('action.share', 'Share')}</span></button><button class="action-btn exit-btn"id="exit-btn"aria-label="Quit"><svg t="1768187765210" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1584" width="35" height="35"><path d="M738.133333 274.346667l-60.16 60.16L812.8 469.333333H368.213333v85.333334h443.733334l-134.826667 134.826666 60.16 60.16 208.213333-207.786666v-60.586667L738.133333 274.346667z" p-id="1585" fill="#808080"></path><path d="M518.826667 789.333333H163.84v-554.666666h355.413333v128h85.333334v-128a85.333333 85.333333 0 0 0-85.333334-85.333334H163.84a85.333333 85.333333 0 0 0-85.333333 85.333334v554.666666a85.333333 85.333333 0 0 0 85.333333 85.333334h355.413333a85.333333 85.333333 0 0 0 85.333334-85.333334v-128h-85.333334z m0 0z" p-id="1586" fill="#808080"></path></svg><span>${t('action.exit', 'Quit')}</span></button><button class="mobile-info-btn"id="mobile-info-btn"aria-label="Open Members"><svg width="35px"height="35px"viewBox="0 0 24 24"fill="none"xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier"stroke-width="0"></g><g id="SVGRepo_tracerCarrier"stroke-linecap="round"stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill-rule="evenodd"clip-rule="evenodd"d="M16.0603 18.307C14.89 19.0619 13.4962 19.5 12 19.5C10.5038 19.5 9.10996 19.0619 7.93972 18.307C8.66519 16.7938 10.2115 15.75 12 15.75C13.7886 15.75 15.3349 16.794 16.0603 18.307ZM17.2545 17.3516C16.2326 15.5027 14.2632 14.25 12 14.25C9.73663 14.25 7.76733 15.5029 6.74545 17.3516C5.3596 15.9907 4.5 14.0958 4.5 12C4.5 7.85786 7.85786 4.5 12 4.5C16.1421 4.5 19.5 7.85786 19.5 12C19.5 14.0958 18.6404 15.9908 17.2545 17.3516ZM21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM12 12C13.2426 12 14.25 10.9926 14.25 9.75C14.25 8.50736 13.2426 7.5 12 7.5C10.7574 7.5 9.75 8.50736 9.75 9.75C9.75 10.9926 10.7574 12 12 12ZM12 13.5C14.0711 13.5 15.75 11.8211 15.75 9.75C15.75 7.67893 14.0711 6 12 6C9.92893 6 8.25 7.67893 8.25 9.75C8.25 11.8211 9.92893 13.5 12 13.5Z"fill="#808080"></path></g></svg></button></div>`;
+	
+	// 为分享和退出按钮添加点击事件
+	const shareBtn = $id('share-btn');
+	const exitBtn = $id('exit-btn');
+	
+	if (shareBtn) {
+		shareBtn.onclick = () => handleShareAction();
+	}
+	
+	if (exitBtn) {
+		exitBtn.onclick = () => handleExitAction();
+	}
+	
 	setupMobileUIHandlers()
 }
 
@@ -406,22 +418,50 @@ export function preventSpaceInput(input) {
 // Login form submit handler
 // 登录表单提交处理函数
 export function loginFormHandler(modal) {
-	return function(e) {
+	return async function(e) {
 		e.preventDefault();
 		let userName, roomName, password, btn, roomInput, warnTip;
+		// 自动生成随机昵称
+		userName = await getRandomNickname();
 		if (modal) {
-			userName = document.getElementById('userName-modal').value.trim();
 			roomName = document.getElementById('roomName-modal').value.trim();
 			password = document.getElementById('password-modal').value.trim();
 			btn = modal.querySelector('.login-btn');
 			roomInput = document.getElementById('roomName-modal')
 		} else {
-			userName = document.getElementById('userName').value.trim();
 			roomName = document.getElementById('roomName').value.trim();
 			password = document.getElementById('password').value.trim();
 			btn = document.querySelector('#login-form .login-btn');
 			roomInput = document.getElementById('roomName')
 		}
+		
+		// 检查节点是否已被解散
+		try {
+			const dissolvedNodes = JSON.parse(localStorage.getItem('dissolvedNodes') || '[]');
+			const nodeId = roomName.toLowerCase();
+			if (dissolvedNodes.includes(nodeId)) {
+				if (roomInput) {
+					roomInput.style.border = '1.5px solid #e74c3c';
+					roomInput.style.background = '#fff6f6';
+					warnTip = document.createElement('div');
+					warnTip.style.color = '#e74c3c';
+					warnTip.style.fontSize = '13px';
+					warnTip.style.marginTop = '4px';
+					warnTip.textContent = t('system.room_dissolved', 'This node has been dissolved and is no longer available.');
+					roomInput.parentNode.appendChild(warnTip);
+					roomInput._warnTip = warnTip;
+					roomInput.focus()
+				}
+				if (btn) {
+					btn.disabled = false;
+					btn.innerText = t('ui.enter', 'ENTER')
+				}
+				return
+			}
+		} catch (error) {
+			console.error('Failed to check dissolved nodes:', error);
+		}
+		
 		const exists = roomsData.some(rd => rd.roomName && rd.roomName.toLowerCase() === roomName.toLowerCase());
 		if (roomInput) {
 			roomInput.style.border = '';
@@ -448,6 +488,11 @@ export function loginFormHandler(modal) {
 				btn.innerText = t('ui.enter', 'ENTER')
 			}
 			return
+		}
+		
+		// 检查节点名称和密码是否为空
+		if (!roomName || !password) {
+			return;
 		}		if (btn) {
 			btn.disabled = true;
 			btn.innerText = t('ui.connecting', 'Connecting...')
@@ -461,21 +506,63 @@ export function loginFormHandler(modal) {
 	}
 }
 
+// 加载昵称列表
+// Load nickname list
+import nicknamesData from './nicknames.json';
+let nicknames = [];
+let usedNicknames = new Set();
+
+async function loadNicknames() {
+	if (nicknames.length === 0) {
+		try {
+			// 直接从模块导入获取昵称列表
+			nicknames = nicknamesData;
+			console.log('Nicknames loaded successfully from module:', nicknames.length, 'names');
+		} catch (error) {
+			console.error('Failed to load nicknames:', error);
+			// Fallback to default nicknames if loading fails
+			nicknames = ["Alice", "Bob", "Charlie", "David", "Eve", "Frank", "Grace", "Henry", "Ivy", "Jack"];
+		}
+	}
+}
+
+// 获取未使用的随机昵称
+// Get a random unused nickname
+async function getRandomNickname() {
+	await loadNicknames();
+	
+	// 如果所有昵称都被使用了，重置使用记录
+	if (usedNicknames.size >= nicknames.length) {
+		usedNicknames.clear();
+	}
+	
+	let randomNickname;
+	let attempts = 0;
+	const maxAttempts = 100;
+	
+	// 随机选择一个未使用的昵称
+	do {
+		randomNickname = nicknames[Math.floor(Math.random() * nicknames.length)];
+		attempts++;
+	} while (usedNicknames.has(randomNickname) && attempts < maxAttempts);
+	
+	// 标记该昵称为已使用
+	usedNicknames.add(randomNickname);
+	
+	return randomNickname;
+}
+
 // 生成登录表单HTML
 // Generate login form HTML
 export function generateLoginForm(isModal = false) {
 	const idPrefix = isModal ? '-modal' : '';
 	return `		<div class="input-group">
-			<input id="userName${idPrefix}" type="text" autocomplete="username" required minlength="1" maxlength="15" placeholder="">
-			<label for="userName${idPrefix}" class="floating-label">${t('ui.username', 'Username')}</label>
-		</div>
-		<div class="input-group">
 			<input id="roomName${idPrefix}" type="text" required minlength="1" maxlength="15" placeholder="">
 			<label for="roomName${idPrefix}" class="floating-label">${t('ui.node_name', 'Node Name')}</label>
 		</div>
 		<div class="input-group">
-			<input id="password${idPrefix}" type="password" autocomplete="${isModal ? 'off' : 'current-password'}" minlength="1" maxlength="15" placeholder="">
-			<label for="password${idPrefix}" class="floating-label">${t('ui.node_password', 'Node Password')} <span class="optional">${t('ui.optional', '(optional)')}</span></label>
+			<input id="password${idPrefix}" type="password" autocomplete="${isModal ? 'off' : 'current-password'}" required minlength="1" maxlength="15" placeholder="">
+			<label for="password${idPrefix}" class="floating-label">${t('ui.node_password', 'Node Password')}</label>
 		</div>
 		<button type="submit" class="login-btn">${t('ui.enter', 'ENTER')}</button>
 	`;
@@ -539,6 +626,25 @@ export function autofillRoomPwd(formPrefix = '') {
 		// Show security warning for plaintext URLs
 		if (window.addSystemMsg) {
 			window.addSystemMsg(t('system.security_warning', '⚠️ This link uses an old format. Room data is not encrypted.'), true);
+		}
+	}
+	
+	// Check if the room has been dissolved
+	if (roomValue) {
+		try {
+			const dissolvedNodes = JSON.parse(localStorage.getItem('dissolvedNodes') || '[]');
+			const nodeId = roomValue.toLowerCase();
+			if (dissolvedNodes.includes(nodeId)) {
+				// Room has been dissolved, clear values
+				roomValue = '';
+				pwdValue = '';
+				// Show error message
+				if (window.addSystemMsg) {
+					window.addSystemMsg(t('system.room_dissolved', '⚠️ This node has been dissolved and is no longer available.'), true);
+				}
+			}
+		} catch (error) {
+			console.error('Failed to check dissolved nodes:', error);
 		}
 	}
 		// Fill in the form fields

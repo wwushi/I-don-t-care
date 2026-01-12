@@ -985,6 +985,48 @@ flex-direction: column;
 	transform: translateX(2px);
 }
 
+/* 分享和退出按钮样式 */
+.action-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	background: none;
+	border: none;
+	color: #808080;
+	padding: 8px 12px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.action-btn:hover {
+	background: rgba(0, 0, 0, 0.06);
+	color: #30a8f7;
+	transform: translateY(-1px);
+}
+
+.action-btn:active {
+	transform: translateY(0);
+}
+
+.action-btn .icon {
+	flex-shrink: 0;
+}
+
+.action-btn span {
+	white-space: nowrap;
+}
+
+/* 调整主标题栏右侧按钮的布局 */
+.main-header-actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
 .rightbar {
 	width: 250px;
 	background: #fff;

@@ -2,13 +2,7 @@
 // Import the NodeCrypt module (used for encryption)
 import './NodeCrypt.js';
 
-// 从 util.file.js 中导入设置文件发送的函数
-// Import setupFileSend function from util.file.js
-import {
-	setupFileSend,
-	handleFileMessage,
-	downloadFile
-} from './util.file.js';
+
 
 // 从 util.image.js 中导入图片处理功能
 // Import image processing functions from util.image.js
@@ -100,8 +94,6 @@ window.addOtherMsg = addOtherMsg;
 window.joinRoom = joinRoom;
 window.notifyMessage = notifyMessage;
 window.setupEmojiPicker = setupEmojiPicker;
-window.handleFileMessage = handleFileMessage;
-window.downloadFile = downloadFile;
 
 // 当 DOM 内容加载完成后执行初始化逻辑
 // Run initialization logic when the DOM content is fully loaded
@@ -177,6 +169,16 @@ window.addEventListener('DOMContentLoaded', () => {
 			if (e.key === 'Enter' && !e.shiftKey) {
 				e.preventDefault();
 				sendMessage();
+			}
+			// 支持 Ctrl+A 全选文本
+			// Support Ctrl+A for selecting all text
+			if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+				e.preventDefault();
+				const selection = window.getSelection();
+				const range = document.createRange();
+				range.selectNodeContents(input);
+				selection.removeAllRanges();
+				selection.addRange(range);
 			}
 		});
 	}
@@ -276,56 +278,6 @@ window.addEventListener('DOMContentLoaded', () => {
 		sendButton.addEventListener('click', sendMessage);
 	}
 	
-	// 设置发送文件功能
-	// Setup file sending functionality
-	setupFileSend({
-		inputSelector: '.input-message-input', // 消息输入框选择器 / Message input selector
-		attachBtnSelector: '.chat-attach-btn', // 附件按钮选择器 / Attach button selector
-		fileInputSelector: '.new-message-wrapper input[type="file"]', // 文件输入框选择器 / File input selector
-		onSend: (message) => {
-			const rd = roomsData[activeRoomIndex];
-			if (rd && rd.chat) {
-				const userName = rd.myUserName || '';
-				const msgWithUser = { ...message, userName };
-				if (rd.privateChatTargetId) {
-					// 私聊文件加密并发送
-					// Encrypt and send private file message
-					const targetClient = rd.chat.channel[rd.privateChatTargetId];
-					if (targetClient && targetClient.shared) {
-						const clientMessagePayload = {
-							a: 'm',
-							t: msgWithUser.type + '_private',
-							d: msgWithUser
-						};
-						const encryptedClientMessage = rd.chat.encryptClientMessage(clientMessagePayload, targetClient.shared);
-						const serverRelayPayload = {
-							a: 'c',
-							p: encryptedClientMessage,
-							c: rd.privateChatTargetId
-						};
-						const encryptedMessageForServer = rd.chat.encryptServerMessage(serverRelayPayload, rd.chat.serverShared);
-						rd.chat.sendMessage(encryptedMessageForServer);
-						
-						// 添加到自己的聊天记录
-						if (msgWithUser.type === 'file_start') {
-							addMsg(msgWithUser, false, 'file_private');
-						}					} else {
-						addSystemMsg(`${t('system.private_file_failed', 'Cannot send private file to')} ${rd.privateChatTargetName}. ${t('system.user_not_connected', 'User might not be fully connected.')}`)
-					}
-				} else {
-					// 公共频道文件发送
-					// Send file to public channel
-					rd.chat.sendChannelMessage(msgWithUser.type, msgWithUser);
-					
-					// 添加到自己的聊天记录
-					if (msgWithUser.type === 'file_start') {
-						addMsg(msgWithUser, false, 'file');
-					}
-				}
-			}		}
-	});
-
-
 	// 判断是否为移动端
 	// Check if the device is mobile
 	const isMobile = () => window.innerWidth <= 768;
@@ -372,47 +324,169 @@ window.addEventListener('languageChange', (event) => {
 	updateStaticTexts();
 });
 
-// 全局拖拽文件自动打开附件功能
-// Global drag file to auto trigger attach button
-let dragCounter = 0;
-let hasTriggeredAttach = false;
-
-// 监听文件上传模态框关闭事件，重置拖拽标志位
-window.addEventListener('fileUploadModalClosed', () => {
-	hasTriggeredAttach = false;
+// 禁止Print Screen键
+// Disable Print Screen key
+document.addEventListener('keydown', (e) => {
+	if (e.key === 'PrintScreen' || e.key === 'Snapshot' || e.key === 'Print') {
+		e.preventDefault();
+		return false;
+	}
 });
 
-document.addEventListener('dragenter', (e) => {
-	dragCounter++;
-	if (!hasTriggeredAttach && e.dataTransfer.items.length > 0) {
-		// 检查是否有文件
-		for (let item of e.dataTransfer.items) {
-			if (item.kind === 'file') {
-				// 自动点击附件按钮
-				const attachBtn = document.querySelector('.chat-attach-btn');
-				if (attachBtn) {
-					attachBtn.click();
-					hasTriggeredAttach = true;
-				}
-				break;
-			}
+// 重写Canvas API，防止截图
+// Override Canvas API to prevent screenshots
+const originalToDataURL = HTMLCanvasElement.prototype.toDataURL;
+HTMLCanvasElement.prototype.toDataURL = function() {
+	// 返回空图片数据URL
+	return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==';
+};
+
+const originalGetImageData = CanvasRenderingContext2D.prototype.getImageData;
+CanvasRenderingContext2D.prototype.getImageData = function() {
+	// 返回空ImageData
+	return new ImageData(new Uint8ClampedArray(0), 0, 0);
+};
+
+const originalToBlob = HTMLCanvasElement.prototype.toBlob;
+HTMLCanvasElement.prototype.toBlob = function(callback) {
+	// 返回空Blob
+	callback(new Blob([], {type: 'image/png'}));
+};
+
+// 处理HTML2Canvas截图
+// Handle HTML2Canvas screenshots
+window.html2canvas = function() {
+	return new Promise((resolve) => {
+		// 返回空canvas元素
+		const canvas = document.createElement('canvas');
+		resolve(canvas);
+	});
+};
+
+// 禁止右键菜单复制
+// Disable right-click menu for copy
+document.addEventListener('contextmenu', (e) => {
+	const target = e.target;
+	if (!target.closest('.input-message-input')) {
+		e.preventDefault();
+		return false;
+	}
+});
+
+// 禁止Ctrl+C复制（除聊天输入框外）
+// Disable Ctrl+C copy (except chat input)
+document.addEventListener('keydown', (e) => {
+	if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
+		const target = e.target;
+		if (!target.closest('.input-message-input')) {
+			e.preventDefault();
+			return false;
 		}
 	}
 });
 
-document.addEventListener('dragleave', (e) => {
-	dragCounter--;
-	if (dragCounter === 0) {
-		hasTriggeredAttach = false;
+// 页面模糊效果处理
+// Page blur effect handling
+function blurPage() {
+	console.log('Blur page triggered');
+	document.body.classList.add('page-blur');
+	// 确保添加到所有相关容器
+	document.getElementById('login-container')?.classList.add('page-blur');
+	document.getElementById('chat-container')?.classList.add('page-blur');
+}
+
+function unblurPage() {
+	console.log('Unblur page triggered');
+	document.body.classList.remove('page-blur');
+	// 确保移除所有相关容器的模糊效果
+	document.getElementById('login-container')?.classList.remove('page-blur');
+	document.getElementById('chat-container')?.classList.remove('page-blur');
+}
+
+// 实时检测鼠标是否在页面上
+// Real-time detection of mouse presence on page
+let isMouseOnPage = true;
+
+// 监听鼠标移动和离开事件
+// Listen for mouse movement and leave events
+window.addEventListener('mousemove', () => {
+	if (!isMouseOnPage) {
+		console.log('Mouse returned to page - unblur');
+		isMouseOnPage = true;
+		unblurPage();
 	}
 });
 
-document.addEventListener('dragover', (e) => {
-	e.preventDefault();
+window.addEventListener('mouseenter', () => {
+	console.log('Mouse entered page - unblur');
+	isMouseOnPage = true;
+	unblurPage();
 });
 
-document.addEventListener('drop', (e) => {
-	e.preventDefault();
-	dragCounter = 0;
-	hasTriggeredAttach = false;
+window.addEventListener('mouseleave', () => {
+	console.log('Mouse left page - blur');
+	isMouseOnPage = false;
+	blurPage();
 });
+
+// 监听鼠标离开浏览器窗口区域
+// Listen for mouse leaving browser window area
+window.addEventListener('mouseout', (e) => {
+	// 检查鼠标是否真的离开了页面
+	if (e.toElement === null && e.relatedTarget === null) {
+		console.log('Mouse out of window - blur');
+		isMouseOnPage = false;
+		blurPage();
+	}
+});
+
+// 监听页面可见性变化（页面切换、最小化）
+// Listen for page visibility change (page switch, minimize)
+document.addEventListener('visibilitychange', () => {
+	console.log('Visibility change:', document.hidden);
+	if (document.hidden) {
+		blurPage();
+	} else {
+		unblurPage();
+	}
+});
+
+// 监听窗口失焦
+// Listen for window blur
+window.addEventListener('blur', () => {
+	console.log('Window blur - blur');
+	blurPage();
+});
+
+window.addEventListener('focus', () => {
+	console.log('Window focus - unblur');
+	unblurPage();
+});
+
+// 监听屏幕共享
+// Listen for screen sharing
+if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+	const originalGetDisplayMedia = navigator.mediaDevices.getDisplayMedia;
+	navigator.mediaDevices.getDisplayMedia = async function(constraints) {
+		console.log('Screen sharing started');
+		blurPage();
+		try {
+			const stream = await originalGetDisplayMedia.apply(this, arguments);
+			// 监听流结束事件，取消模糊
+			const tracks = stream.getTracks();
+			tracks.forEach(track => {
+				track.addEventListener('ended', () => {
+					console.log('Screen sharing ended');
+					unblurPage();
+				});
+			});
+			return stream;
+		} catch (error) {
+			console.log('Screen sharing failed');
+			unblurPage();
+			throw error;
+		}
+	};
+}
+
+

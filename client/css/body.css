@@ -2,6 +2,17 @@ body {
 	background: #fff;
 	font-family: 'Roboto', Arial, sans-serif;
 	margin: 0;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+}
+
+.input-message-input {
+	user-select: text;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
 }
 
 /* 翻转卡片样式 / Flip Card Styles */
@@ -571,4 +582,62 @@ body {
 .new-message-wrapper {
   position: relative;
   z-index: 1;
+}
+
+/* 页面模糊效果 - 直接应用到所有容器 */
+.page-blur {
+  filter: blur(15px) !important;
+  -webkit-filter: blur(15px) !important;
+  -moz-filter: blur(15px) !important;
+  -ms-filter: blur(15px) !important;
+  filter: blur(15px) !important;
+  transition: filter 0.3s ease !important;
+  -webkit-transition: -webkit-filter 0.3s ease !important;
+  -moz-transition: -moz-filter 0.3s ease !important;
+  -ms-transition: -ms-filter 0.3s ease !important;
+  z-index: 9999 !important;
+  position: relative !important;
+  pointer-events: none !important;
+}
+
+/* 确保所有子元素都直接应用模糊效果，不依赖继承 */
+.page-blur, .page-blur * {
+  filter: blur(15px) !important;
+  -webkit-filter: blur(15px) !important;
+  -moz-filter: blur(15px) !important;
+  -ms-filter: blur(15px) !important;
+  pointer-events: none !important;
+}
+
+/* 针对body的特殊处理 */
+body.page-blur {
+  filter: blur(15px) !important;
+  -webkit-filter: blur(15px) !important;
+  -moz-filter: blur(15px) !important;
+  -ms-filter: blur(15px) !important;
+  pointer-events: auto !important;
+}
+
+/* 确保login容器和内部元素都应用模糊效果 */
+#login-container.page-blur, #login-container.page-blur * {
+  filter: blur(15px) !important;
+  -webkit-filter: blur(15px) !important;
+  -moz-filter: blur(15px) !important;
+  -ms-filter: blur(15px) !important;
+}
+
+/* 确保chat容器和内部元素都应用模糊效果 */
+#chat-container.page-blur, #chat-container.page-blur * {
+  filter: blur(15px) !important;
+  -webkit-filter: blur(15px) !important;
+  -moz-filter: blur(15px) !important;
+  -ms-filter: blur(15px) !important;
+}
+
+/* 确保flip-card元素也应用模糊效果 */
+#flip-card.page-blur, #flip-card.page-blur * {
+  filter: blur(15px) !important;
+  -webkit-filter: blur(15px) !important;
+  -moz-filter: blur(15px) !important;
+  -ms-filter: blur(15px) !important;
 }

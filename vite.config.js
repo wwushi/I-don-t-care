@@ -11,6 +11,9 @@ export default defineConfig({
 	// Plugins
 	// 插件
 	plugins: [],
+	// Ensure nicknames.json is included in assets
+	// 确保 nicknames.json 被包含在资源中
+	publicDir: 'client',
 	// Build options
 	// 构建选项
 	build: {

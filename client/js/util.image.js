@@ -9,41 +9,14 @@ import {
 // Process and compress image file
 // 处理并压缩图片文件
 export async function processImage(file, callback) {
-	// Create image element for loading file
-	// 创建图片元素用于加载文件
-	const img = new Image();
-	img.onload = function() {
-		const maxW = 1280, // Max width
-			maxH = 1280;    // 最大宽度/高度
-		let w = img.naturalWidth,
-			h = img.naturalHeight;
-		// Resize if too large
-		// 如果图片过大则缩放
-		if (w > maxW || h > maxH) {
-			const scale = Math.min(maxW / w, maxH / h);
-			w = Math.round(w * scale);
-			h = Math.round(h * scale)
-		}
-		// Create canvas for drawing image
-		// 创建画布用于绘制图片
-		const canvas = createElement('canvas');
-		canvas.width = w;
-		canvas.height = h;
-		const ctx = canvas.getContext('2d');
-		ctx.drawImage(img, 0, 0, w, h);
-		let dataUrl;
-		// Export as webp with 90% quality
-		// 导出为 webp，90% 质量
-		dataUrl = canvas.toDataURL('image/webp', 0.90);
-		callback(dataUrl)
-	};
-	// Read file as data URL
-	// 以 dataURL 方式读取文件
+	// 直接使用FileReader读取文件，不依赖Canvas API
+	// Use FileReader directly without relying on Canvas API
 	const reader = new FileReader();
 	reader.onload = function(e) {
-		img.src = e.target.result
+		const dataUrl = e.target.result;
+		callback(dataUrl);
 	};
-	reader.readAsDataURL(file)
+	reader.readAsDataURL(file);
 }
 
 // Translate message key
