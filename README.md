@@ -1,43 +1,6 @@
-# I-don-t-care
-
-🌐 **[English README](README_EN.md)**
-
-## 🚀 部署说明
-
-### 方法一：一键部署到 Cloudflare Workers
-
-点击下方按钮即可一键部署到 Cloudflare Workers：
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button?projectName=NodeCrypt)](https://deploy.workers.cloudflare.com/?url=https://github.com/shuaiplus/NodeCrypt)
-
-- 构建命令：npm run build
-- 部署命令：npm run deploy
-
-> 注意：此方式会基于主仓库创建新项目，后续主仓库更新不会自动同步（项目已成型，很少更新，可以直接使用方法一）。
-
-### 方法二：自动同步 fork 并部署（推荐长期维护）
-1. 先 fork 本项目到你自己的 GitHub 账号。
-2. 打开 Cloudflare Workers 控制台，选择“从 GitHub 导入”，并选择你 fork 的仓库进行部署。
-
-- 构建命令：npm run build
-- 部署命令：npm run deploy
-
-> 本项目已内置自动同步 workflow，fork 后无需任何操作，主仓库的更新会自动同步到你的 fork 仓库，Cloudflare 也会自动重新部署，无需手动维护。
-
-### 方法三：Docker 一键部署（不稳定，不建议）
-
-```bash
-docker run -d --name nodecrypt -p 80:80 ghcr.io/shuaiplus/nodecrypt
-```
-
-！ 必须开启HTTPS，不然传输密钥会失败，导致无法进入房间。
-
-### 方法四：本地开发部署
-克隆项目并安装依赖后，使用 `npm run dev` 启动开发服务器。
-使用 `npm run deploy` 部署到 Cloudflare Workers。
+## 基于https://github.com/shuaiplus/NodeCrypt
 
 ## 📝 项目简介
-
-I-don-t-care 是一个真正的端到端加密聊天系统，实现完全的零知识架构。整个系统设计确保服务器、网络中间人、甚至系统管理员都无法获取任何明文消息内容。所有加密和解密操作都在客户端本地进行，服务器仅作为加密数据的盲中继。
 
 ### 系统架构
 - **前端**：ES6+ 模块化 JavaScript，无框架依赖
@@ -170,22 +133,10 @@ sequenceDiagram
 本项目仅供学习和技术研究使用，不得用于任何违法犯罪活动。使用者应遵守所在国家和地区的相关法律法规。项目作者不承担因使用本软件而产生的任何法律责任。请在合法合规的前提下使用本项目。
 
 ---
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=wwushi/I-don-t-care&type=Timeline)](https://www.star-history.com/#wwushi/I-don-t-care&Timeline)
-
-**I-don-t-care** - 真正的端到端加密通信 🔐
-
-*"在数字时代，加密是保护隐私的最后一道防线"*
 
 ## 📋 项目修改记录
 
-### 1. 图片功能修复
-- **问题**：粘贴图片后变成黄色像素点
-- **解决方案**：修改 `util.image.js`，移除 Canvas 处理逻辑，直接使用 FileReader 读取文件为 dataURL
-- **效果**：图片粘贴功能恢复正常，不再出现黄色像素点
-
-### 2. 页面模糊功能实现
+### 页面模糊功能实现
 - **功能描述**：当鼠标离开页面、页面切换、最小化或进入屏幕共享时，页面内容自动模糊
 - **实现细节**：
   - 修改 `main.js`，添加实时鼠标检测逻辑
@@ -193,21 +144,11 @@ sequenceDiagram
   - 修改 `body.css`，增强模糊效果样式，确保所有元素正确应用模糊效果
 - **效果**：鼠标离开页面时立即模糊，鼠标回到页面时立即取消模糊，有效保护用户隐私
 
-### 3. 节点解散功能完善
+### 节点解散功能完善
 - **问题**：节点解散后仍能通过原链接进入
 - **解决方案**：在 `loginFormHandler` 中添加解散节点检查逻辑
 - **效果**：尝试进入已解散节点时，显示错误提示，无法继续登录
 
-### 4. 随机昵称列表更新
-- **更新内容**：将 `nicknames.json` 更新为武侠人物名单
-- **数量**：包含 286 个来自不同武侠小说和影视作品的经典人物名
-- **效果**：随机昵称分配更加丰富多样，增强用户体验
-
-### 5. 增强的隐私保护
-- **禁止 Print Screen 键**：防止用户通过 Print Screen 键截图
-- **禁用右键菜单复制**：保护页面内容不被右键复制
-- **禁用 Ctrl+C 复制**：除聊天输入框外，其他区域禁止 Ctrl+C 复制
-- **重写 Canvas API**：防止通过 Canvas API 截图
 
 ## 🔧 项目维护
 
