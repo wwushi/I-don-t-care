@@ -483,7 +483,8 @@ export function loginFormHandler(modal) {
 				roomInput.parentNode.appendChild(warnTip);
 				roomInput._warnTip = warnTip;
 				roomInput.focus()
-			}			if (btn) {
+			}
+			if (btn) {
 				btn.disabled = false;
 				btn.innerText = t('ui.enter', 'ENTER')
 			}
@@ -493,14 +494,15 @@ export function loginFormHandler(modal) {
 		// 检查节点名称和密码是否为空
 		if (!roomName || !password) {
 			return;
-		}		if (btn) {
+		}
+		if (btn) {
 			btn.disabled = true;
 			btn.innerText = t('ui.connecting', 'Connecting...')
 		}
 		window.joinRoom(userName, roomName, password, modal, function(success) {
 			if (!success && btn) {
 				btn.disabled = false;
-				btn.innerText = 'ENTER'
+				btn.innerText = t('ui.enter', 'ENTER')
 			}
 		})
 	}
