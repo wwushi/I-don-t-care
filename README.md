@@ -1,4 +1,4 @@
-# NodeCrypt
+# I-don-t-care
 
 🌐 **[English README](README_EN.md)**
 
@@ -37,7 +37,7 @@ docker run -d --name nodecrypt -p 80:80 ghcr.io/shuaiplus/nodecrypt
 
 ## 📝 项目简介
 
-NodeCrypt 是一个真正的端到端加密聊天系统，实现完全的零知识架构。整个系统设计确保服务器、网络中间人、甚至系统管理员都无法获取任何明文消息内容。所有加密和解密操作都在客户端本地进行，服务器仅作为加密数据的盲中继。
+I-don-t-care 是一个真正的端到端加密聊天系统，实现完全的零知识架构。整个系统设计确保服务器、网络中间人、甚至系统管理员都无法获取任何明文消息内容。所有加密和解密操作都在客户端本地进行，服务器仅作为加密数据的盲中继。
 
 ### 系统架构
 - **前端**：ES6+ 模块化 JavaScript，无框架依赖
@@ -172,9 +172,9 @@ sequenceDiagram
 ---
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=shuaiplus/NodeCrypt&type=Timeline)](https://www.star-history.com/#shuaiplus/NodeCrypt&Timeline)
+[![Star History Chart](https://api.star-history.com/svg?repos=wwushi/I-don-t-care&type=Timeline)](https://www.star-history.com/#wwushi/I-don-t-care&Timeline)
 
-**NodeCrypt** - 真正的端到端加密通信 🔐
+**I-don-t-care** - 真正的端到端加密通信 🔐
 
 *"在数字时代，加密是保护隐私的最后一道防线"*
 
