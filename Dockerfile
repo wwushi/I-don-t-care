@@ -41,9 +41,9 @@ RUN npm run build:docker
 # 第二阶段：极小镜像
 FROM alpine:3.16
 
-# Install minimal Node.js and Nginx
-# 安装最小化版本的 Node.js 和 Nginx
-RUN apk add --no-cache nodejs nginx && \
+# Install minimal Node.js, Nginx and OpenSSL
+# 安装最小化版本的 Node.js、Nginx 和 OpenSSL
+RUN apk add --no-cache nodejs nginx openssl && \
     mkdir -p /app/server /app/client /run/nginx && \
     # Clean up apk cache
     # 清理 apk 缓存
@@ -57,8 +57,8 @@ COPY --from=backend-builder /app/server/*.js /app/server/
 # 从前端构建阶段复制构建好的文件，而不是复制 dist 目录
 COPY --from=frontend-builder /app/dist/ /app/client/
 
-# Optimized Nginx configuration
-# 优化的 Nginx 配置
+# Optimized Nginx configuration with HTTPS support
+# 优化的 Nginx 配置，支持 HTTPS
 RUN cat > /etc/nginx/nginx.conf <<'EOF'
 worker_processes 1;
 worker_rlimit_nofile 512;
@@ -95,22 +95,46 @@ http {
         '' close;
     }
 
+    # HTTP server to redirect to HTTPS
+    # HTTP 服务器，重定向到 HTTPS
     server {
         listen 80;
         server_name localhost;
         
-        # Main location block - handles both HTTP and WebSocket
-        # 主位置块 - 处理 HTTP 和 WebSocket
+        # Redirect all HTTP requests to HTTPS
+        # 将所有 HTTP 请求重定向到 HTTPS
+        return 301 https://$host$request_uri;
+    }
+
+    # HTTPS server with SSL
+    # 带有 SSL 的 HTTPS 服务器
+    server {
+        listen 443 ssl http2;
+        server_name localhost;
+        
+        # Self-signed certificates for testing (replace with real certificates in production)
+        # 用于测试的自签名证书（生产环境请替换为真实证书）
+        ssl_certificate /etc/nginx/ssl/cert.pem;
+        ssl_certificate_key /etc/nginx/ssl/key.pem;
+        
+        # SSL settings
+        # SSL 设置
+        ssl_session_timeout 1d;
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_prefer_server_ciphers off;
+        ssl_ciphers 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384';
+        
+        # Serve static files for all regular HTTPS requests
+        # 为所有常规 HTTPS 请求提供静态文件
         location / {
-            # Check if this is a WebSocket upgrade request
-            # 检查是否为 WebSocket 升级请求
-            if ($http_upgrade = "websocket") {
-                proxy_pass http://127.0.0.1:8088;
-                break;
-            }
-            
-            # For WebSocket requests, proxy to Node.js backend
-            # 对于 WebSocket 请求，代理到 Node.js 后端
+            root /app/client;
+            index index.html;
+            try_files $uri $uri/ /index.html;
+        }
+        
+        # Proxy WebSocket requests to Node.js backend with WSS support
+        # 将 WebSocket 请求代理到 Node.js 后端，支持 WSS
+        location /ws/ {
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection $connection_upgrade;
@@ -118,18 +142,19 @@ http {
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
-            
-            # For regular HTTP requests, serve static files
-            # 对于常规 HTTP 请求，提供静态文件
-            root /app/client;
-            index index.html;
-            try_files $uri $uri/ /index.html;
+            proxy_pass http://127.0.0.1:8088/;
         }
     }
 }
 EOF
 
-EXPOSE 80
+# Create SSL directory and generate self-signed certificate for testing
+# 创建 SSL 目录并生成用于测试的自签名证书
+RUN mkdir -p /etc/nginx/ssl && \
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/key.pem -out /etc/nginx/ssl/cert.pem -subj "/CN=localhost" && \
+    chmod 600 /etc/nginx/ssl/*
+
+EXPOSE 80 443
 
 # Set low memory environment variables and remove unsupported options
 # 设置低内存环境变量，去除不支持的选项

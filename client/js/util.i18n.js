@@ -142,7 +142,7 @@ const LANGUAGES = {
 			'meta.twitter_description': 'NodeCrypt 是一个端到端加密的开源聊天系统，所有加密解密均在客户端本地完成，服务器无法获取明文。',
 			
 			// Login and main UI
-			'ui.enter_node': '开启新的吐槽',
+			'ui.enter_node': '开启新会议',
 			'ui.username': '用户名',
 			'ui.node_name': '节点名称',
 			'ui.node_password': '节点密码',
@@ -360,7 +360,7 @@ export function updateStaticTexts() {
 		// Update "Enter a Node" text in sidebar
 	const joinRoomText = document.getElementById('join-room-text');
 	if (joinRoomText) {
-		joinRoomText.textContent = '开启新的吐槽';
+		joinRoomText.textContent = '开启新会议';
 	}
 	
 	// Update Members title in rightbar

@@ -1,4 +1,4 @@
-﻿// NodeCrypt core cryptographic client for secure chat
+// NodeCrypt core cryptographic client for secure chat
 // NodeCrypt 安全聊天的核心加密客户端
 
 import {
@@ -168,7 +168,11 @@ class NodeCrypt {
 				namedCurve: 'P-384'
 			}, false, ['deriveKey', 'deriveBits']);
 			this.serverShared = null;
-			this.sendMessage(Buffer.from(await crypto.subtle.exportKey('raw', this.serverKeys.publicKey)).toString('hex'))
+			// 如果已经有服务器公钥，立即发送ECDH公钥
+			// 否则等待server-key消息
+			if (this.config.rsaPublic) {
+				this.sendMessage(Buffer.from(await crypto.subtle.exportKey('raw', this.serverKeys.publicKey)).toString('hex'));
+			}
 		} catch (error) {
 			this.logEvent('onOpen', error, 'error')
 		}
@@ -184,6 +188,7 @@ class NodeCrypt {
 			return
 		}
 		this.logEvent('onMessage', event.data);
+		let isServerKeyProcessed = false;
 		try {
 			const data = JSON.parse(event.data);
 			if (data.type === 'server-key') {
@@ -191,9 +196,11 @@ class NodeCrypt {
 				if (!result) {
 					return
 				}
+				isServerKeyProcessed = true;
 			}
 		} catch (e) {}
-		if (!this.serverShared) {
+		// 只有当不是server-key消息或者server-key消息处理完成后，才处理ECDH密钥交换
+		if (!this.serverShared && !isServerKeyProcessed) {
 			const parts = event.data.split('|');
 			if (!parts[0] || !parts[1]) {
 				return
@@ -616,6 +623,14 @@ class NodeCrypt {
 		localStorage.removeItem(this.SERVER_KEY_STORAGE);
 		localStorage.setItem(this.SERVER_KEY_STORAGE, serverKey);
 		this.config.rsaPublic = serverKey;
+		// 收到服务器公钥后，发送客户端的ECDH公钥
+		if (this.serverKeys) {
+			try {
+				this.sendMessage(Buffer.from(await crypto.subtle.exportKey('raw', this.serverKeys.publicKey)).toString('hex'));
+			} catch (error) {
+				this.logEvent('handleServerKey-send-ecdh', error, 'error');
+			}
+		}
 		return true
 	}
 };

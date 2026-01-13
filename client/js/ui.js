@@ -572,7 +572,7 @@ export function generateLoginForm(isModal = false) {
 export function openLoginModal() {
 	const modal = document.createElement('div');
 	modal.className = 'login-modal';
-	modal.innerHTML = `<div class="login-modal-bg"></div><div class="login-modal-card"><button class="login-modal-close login-modal-close-abs">&times;</button><h1>开启新的吐槽</h1><form id="login-form-modal">${generateLoginForm(true)}</form></div>`;
+	modal.innerHTML = `<div class="login-modal-bg"></div><div class="login-modal-card"><button class="login-modal-close login-modal-close-abs">&times;</button><h1>开启新会议</h1><form id="login-form-modal">${generateLoginForm(true)}</form></div>`;
 	document.body.appendChild(modal);
 	modal.querySelector('.login-modal-close').onclick = () => modal.remove();
 	preventSpaceInput(modal.querySelector('#userName-modal'));
