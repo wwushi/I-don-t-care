@@ -25,6 +25,9 @@ import {
 import {
 	updateChatInputStyle
 } from './chat.js';
+import {
+	sha256
+} from 'js-sha256';
 
 // Utility functions for security and error handling
 // 安全和错误处理工具函数
@@ -438,7 +441,8 @@ export function loginFormHandler(modal) {
 		// 检查节点是否已被解散
 		try {
 			const dissolvedNodes = JSON.parse(localStorage.getItem('dissolvedNodes') || '[]');
-			const nodeId = roomName.toLowerCase();
+			// 使用完整的节点信息哈希作为唯一标识符
+			const nodeId = sha256(roomName + password);
 			if (dissolvedNodes.includes(nodeId)) {
 				if (roomInput) {
 					roomInput.style.border = '1.5px solid #e74c3c';
@@ -491,10 +495,10 @@ export function loginFormHandler(modal) {
 			return
 		}
 		
-		// 检查节点名称和密码是否为空
-		if (!roomName || !password) {
-			return;
-		}
+		// 检查节点名称是否为空
+	if (!roomName) {
+		return;
+	}
 		if (btn) {
 			btn.disabled = true;
 			btn.innerText = t('ui.connecting', 'Connecting...')
@@ -631,24 +635,8 @@ export function autofillRoomPwd(formPrefix = '') {
 		}
 	}
 	
-	// Check if the room has been dissolved
-	if (roomValue) {
-		try {
-			const dissolvedNodes = JSON.parse(localStorage.getItem('dissolvedNodes') || '[]');
-			const nodeId = roomValue.toLowerCase();
-			if (dissolvedNodes.includes(nodeId)) {
-				// Room has been dissolved, clear values
-				roomValue = '';
-				pwdValue = '';
-				// Show error message
-				if (window.addSystemMsg) {
-					window.addSystemMsg(t('system.room_dissolved', '⚠️ This node has been dissolved and is no longer available.'), true);
-				}
-			}
-		} catch (error) {
-			console.error('Failed to check dissolved nodes:', error);
-		}
-	}
+	// No longer check dissolved nodes here, as we now use roomName+password hash for unique identification
+	// 不再在此检查已解散节点，因为我们现在使用roomName+password哈希作为唯一标识
 		// Fill in the form fields
 	if (roomValue) {
 		const roomInput = document.getElementById(formPrefix + 'roomName');
@@ -665,13 +653,12 @@ export function autofillRoomPwd(formPrefix = '') {
 			pwdInput.style.background = isPlaintext ? '#fff9e6' : '#f5f5f5'; // Yellow tint for plaintext
 			
 			// Add visual indicator for no password and keep label floating
-			if (!pwdValue) {
-				pwdInput.placeholder = 'No password required';
-				// Add a space to make the input appear "filled" so the label stays floating
-				pwdInput.value = ' ';
-				// Make the text invisible but keep the label floating behavior
-				pwdInput.style.color = 'transparent';
-			}
+        if (!pwdValue) {
+            pwdInput.placeholder = 'No password required';
+            // Set value to empty string but add a class to keep label floating
+            pwdInput.value = '';
+            pwdInput.classList.add('empty-with-label');
+        }
 		}
 	}
 	

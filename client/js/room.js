@@ -21,6 +21,9 @@ import {
 	createElement
 } from './util.dom.js';
 import { t } from './util.i18n.js';
+import {
+	sha256
+} from 'js-sha256';
 let roomsData = [];
 let activeRoomIndex = -1;
 
@@ -370,9 +373,9 @@ export function exitRoom() {
 		// Record that this node has been dissolved
 		try {
 			const dissolvedNodes = JSON.parse(localStorage.getItem('dissolvedNodes') || '[]');
-			// 使用节点名称的哈希值作为唯一标识符
-			// Use the hash of the node name as the unique identifier
-			const nodeId = rd.roomName.toLowerCase();
+			// 使用完整的节点信息哈希作为唯一标识符
+			// Use the hash of complete node information as the unique identifier
+			const nodeId = sha256(rd.roomName + rd.password);
 			if (!dissolvedNodes.includes(nodeId)) {
 				dissolvedNodes.push(nodeId);
 				localStorage.setItem('dissolvedNodes', JSON.stringify(dissolvedNodes));

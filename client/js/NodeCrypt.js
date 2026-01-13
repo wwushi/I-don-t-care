@@ -77,10 +77,23 @@ class NodeCrypt {
 	setCredentials(username, channel, password) {
 		this.logEvent('setCredentials');
 		try {
+			// 基于房间名称和密码生成唯一的10位ID，确保相同房间名称和密码生成相同ID
+			// Generate unique 10-digit ID based on room name and password, ensuring same room name and password generate same ID
+			const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+			const baseHash = sha256(channel + password);
+			let randomId = '';
+			for (let i = 0; i < 10; i++) {
+				const index = parseInt(baseHash.substr(i * 2, 2), 16) % chars.length;
+				randomId += chars.charAt(index);
+			}
+			
 			this.credentials = {
 				username: username,
-				channel: sha256(channel),
-				password: sha256(password)
+				// 将节点名称、生成的ID和密码一起哈希生成channel标识
+				// Hash node name, generated ID, and password together to generate channel identifier
+				channel: sha256(channel + randomId + password),
+				password: sha256(password),
+				randomId: randomId  // 保存生成的ID，用于后续使用
 			}
 		} catch (error) {
 			this.logEvent('setCredentials', error, 'error');
