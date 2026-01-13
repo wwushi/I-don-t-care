@@ -151,7 +151,7 @@ EOF
 # Create SSL directory and generate self-signed certificate for testing
 # 创建 SSL 目录并生成用于测试的自签名证书
 RUN mkdir -p /etc/nginx/ssl && \
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/key.pem -out /etc/nginx/ssl/cert.pem -subj "/CN=localhost" && \
+    openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/nginx/ssl/key.pem -out /etc/nginx/ssl/cert.pem -subj "/CN=localhost" && \
     chmod 600 /etc/nginx/ssl/*
 
 EXPOSE 80 443
