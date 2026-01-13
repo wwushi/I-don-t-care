@@ -142,7 +142,7 @@ const LANGUAGES = {
 			'meta.twitter_description': 'NodeCrypt 是一个端到端加密的开源聊天系统，所有加密解密均在客户端本地完成，服务器无法获取明文。',
 			
 			// Login and main UI
-			'ui.enter_node': '进入新的节点',
+			'ui.enter_node': '开启新的吐槽',
 			'ui.username': '用户名',
 			'ui.node_name': '节点名称',
 			'ui.node_password': '节点密码',
@@ -258,7 +258,7 @@ const LANGUAGES = {
 
 // Current language
 // 当前语言
-let currentLanguage = 'en';
+let currentLanguage = 'zh';
 
 // Get translation for a key
 // 获取翻译文本
@@ -310,14 +310,8 @@ export function getAvailableLanguages() {
 // Initialize i18n with settings
 // 根据设置初始化国际化
 export function initI18n(settings) {
-	if (settings && settings.language) {
-		setLanguage(settings.language);
-	} else {
-		// Auto-detect browser language
-		// 自动检测浏览器语言
-		const browserLang = detectBrowserLanguage();
-		setLanguage(browserLang);
-	}
+	// 强制使用中文作为默认语言
+	setLanguage('zh');
 }
 
 // Detect browser language and return supported language code
@@ -346,11 +340,8 @@ export function updateStaticTexts() {
 		return;
 	}
 	
-	// Update login title
-	const loginTitle = document.getElementById('login-title');
-	if (loginTitle) {
-		loginTitle.textContent = t('ui.enter_node', 'Enter a Node');
-	}
+	// 登录标题已硬编码为中文，不再动态更新
+	// Login title is hardcoded in Chinese, no longer updated dynamically
 		// Update login form content with new translations
 	const loginFormContainer = document.getElementById('login-form');
 	if (loginFormContainer) {
@@ -369,7 +360,7 @@ export function updateStaticTexts() {
 		// Update "Enter a Node" text in sidebar
 	const joinRoomText = document.getElementById('join-room-text');
 	if (joinRoomText) {
-		joinRoomText.textContent = t('ui.enter_node', 'Enter a Node');
+		joinRoomText.textContent = '开启新的吐槽';
 	}
 	
 	// Update Members title in rightbar

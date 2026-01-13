@@ -641,3 +641,56 @@ body.page-blur {
   -moz-filter: blur(15px) !important;
   -ms-filter: blur(15px) !important;
 }
+
+/* 版权信息样式 */
+.powered-by {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  padding: 12px;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid #e0e0e0;
+  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.05);
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.powered-by a {
+  color: #30a8f7;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  margin: 0 4px;
+}
+
+.powered-by a:hover {
+  color: #2196e3;
+  text-decoration: underline;
+}
+
+/* 确保在登录页面和聊天页面都能正确显示 */
+body > .powered-by {
+  display: block !important;
+  position: fixed !important;
+  z-index: 9999 !important;
+}
+
+/* 确保版权信息在模糊状态下也能正确显示 */
+.page-blur ~ .powered-by {
+  filter: none !important;
+  -webkit-filter: none !important;
+  -moz-filter: none !important;
+  -ms-filter: none !important;
+  pointer-events: auto !important;
+}
+
+/* 确保body的overflow不会影响固定定位元素 */
+body {
+  overflow: visible !important;
+}
